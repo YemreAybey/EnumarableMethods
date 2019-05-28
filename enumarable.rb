@@ -1,4 +1,4 @@
-module Enumarable
+module Enumerable
 
   def my_each
     if self.is_a? Array
@@ -110,23 +110,45 @@ module Enumarable
     true
   end
   
-  def my_count
+  def my_count(num = nil)
     counter=0
-    if self.is_a? Array
+    if num == nil
+    if self.is_a?(Array) && block_given?
       self.my_each do |element|
         case yield element
           when true then counter += 1
         end
       end
-    elsif self.is_a? Hash
+    elsif self.is_a?(Hash) && block_given?
       self.my_each do |key, element|
         case yield key, element
+          when true then counter += 1
+        end
+      end
+    elsif self.is_a?(Array) && !block_given?
+      return self.length
+    elsif self.is_a?(Hash) && !block_given?
+      return self.keys.length
+    else
+      return "You can't use my_count? method on #{self.class} class"
+    end
+  else
+    if self.is_a? Array
+      self.my_each do |element|
+        case num == element
+          when true then counter += 1
+        end
+      end
+    elsif self.is_a? Hash
+      self.my_each do |key, element|
+        case element == num 
           when true then counter += 1
         end
       end
     else
       return "You can't use my_count? method on #{self.class} class"
     end
+  end
     counter
   end
   
@@ -192,3 +214,7 @@ module Enumarable
     end
   
   end
+
+  include Enumerable
+  array = [1, 2, 2, 2]
+  puts array.my_count {|num| num > 1}
