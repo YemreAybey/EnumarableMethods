@@ -215,6 +215,5 @@ module Enumerable
   
   end
 
-  include Enumerable
   array = [1, 2, 2, 2]
   puts array.my_count {|num| num > 1}
